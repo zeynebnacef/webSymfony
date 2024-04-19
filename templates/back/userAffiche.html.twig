@@ -1,0 +1,88 @@
+{% extends 'back/index.html.twig' %}
+{% block body %}
+<div class="wrapper">
+    <div class="main-panel" id="main-panel">
+        <div class="content" style="margin-top: 100px;">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title"> List D'utilisateurs</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead class="text-primary">
+                                        <th>Nom</th>
+                                        <th>Prenom</th>
+                                        <th>Naissance</th>
+                                        <th >Email</th>
+                                        <th >Télephone</th>
+                                        <th >Ville</th>
+                                        <th >Role</th>
+                                        <th >Actions</th>
+                                    </thead>
+                                    <tbody>
+                                        {% for user in users %}
+                                        <tr>
+                                            <td>{{ user.nom }}</td>
+                                            <td>{{ user.prenom }}</td>
+                                            <td>{{ user.datenaissance|date('Y-m-d') }}</td>
+                                            <td>{{ user.email }}</td>
+                                            <td>{{ user.numTel }}</td>
+                                            <td>{{ user.localisation }}</td>
+                                            <td>{{ user.role }}</td>
+                                            <td>
+                                             <button style="background-color: #FEA116; border-radius: 15px; border: none; color: white;" onclick="deleteUser({{ user.idu }})">Supprimer</button>
+                                             <button style="background-color: #FEA116; border-radius: 15px; border: none; color: white;" onclick="updateUser({{ user.idu }})">Modifier</button>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <footer class="footer">
+            <div class="container-fluid">
+                <nav>
+                    <ul>
+                        <li><a>CityVibe</a></li>
+                        <li><a>About Us</a></li>
+                        <li><a>Blog</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </footer>
+    </div>
+</div>
+<script>
+    function updateUser(userId) {
+        window.location.href = `/updateAdmin/${userId}`;
+    }
+</script>
+
+<script>
+    function deleteUser(userId) {
+        if (confirm('Are you sure you want to delete this user?')) {
+            fetch(`/deleteUser/${userId}`, {
+                method: 'DELETE',
+            })
+            .then(response => {
+                if (response.ok) {
+                    location.reload(); // Reload the page after successful deletion
+                } else {
+                    alert('Failed to delete user');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while deleting the user');
+            });
+        }
+    }
+</script>
+{% endblock %}
